@@ -1,97 +1,88 @@
 
-4) ,17)
+2) ,15) 
+Process control system calls: The demonstration of FORK, EXECVE and WAIT system calls along with zombie and orphan states
+Implement the C program in which main program accepts the integers to be sorted. Main program uses the FORK system call to create a new process called a child process. Parent process sorts the integers using sorting algorithm and waits for child process using WAIT system call to sort the integers using any sorting algorithm. Also demonstrate zombie and orphan states.
 
-Implement the C program for CPU Scheduling Algorithms: Shortest Job First (Pre-emptive) and Round Robin with different arrival time.
-
-
-SJF:
 #include <stdio.h>
-  int main() 
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+void bubblesort()
 {
-      int arrival_time[10], burst_time[10], temp[10];
-      int i, smallest, count = 0, time, limit;
-      double wait_time = 0, turnaround_time = 0, end;
-      float average_waiting_time, average_turnaround_time;
-      printf("Enter the Total Number of Processes:");
-      scanf("%d", &limit); 
-      printf("nEnter Details of %d Processesn", limit);
-      for(i = 0; i < limit; i++)
-      {
-            printf("nEnter Arrival Time:t");
-            scanf("%d", &arrival_time[i]);
-            printf("Enter Burst Time:t");
-            scanf("%d", &burst_time[i]); 
-            temp[i] = burst_time[i];
-      }
-      burst_time[9] = 9999;  
-      for(time = 0; count != limit; time++)
-      {
-            smallest = 9;
-            for(i = 0; i < limit; i++)
-            {
-                  if(arrival_time[i] <= time && burst_time[i] < burst_time[smallest] && burst_time[i] > 0)
-                  {
-                        smallest = i;
-                  }
-            }
-            burst_time[smallest]--;
-            if(burst_time[smallest] == 0)
-            {
-                  count++;
-                  end = time + 1;
-                  wait_time = wait_time + end - arrival_time[smallest] - temp[smallest];
-                  turnaround_time = turnaround_time + end - arrival_time[smallest];
-            }
-      }
-      average_waiting_time = wait_time / limit; 
-      average_turnaround_time = turnaround_time / limit;
-      printf("nnAverage Waiting Time:t%lfn", average_waiting_time);
-      printf("Average Turnaround Time:t%lfn", average_turnaround_time);
-      return 0;
+int i,j,a[50],n,temp;
+printf("\nBubble sort\n");
+printf("Enter size of array\t");
+scanf("%d",&n);
+for(i=0;i<n;i++)
+{
+scanf("%d",&a[i]);
+}
+for(i=0;i<n;i++)
+{
+for(j=i+1;j<n;j++)
+{
+if(a[i]>a[j])
+{
+int temp;
+temp=a[i];
+a[i]=a[j];
+a[j]=temp;
+}
+}
+}
+printf("\nSorted array is\t");
+for(i=0;i<n;i++)
+{
+printf("%d\t",a[i]);
+}  
+}
+void selectionsort()
+{
+int i,j,a[50],n,min;
+printf("Selection sort\n");
+printf("\nEnter size of array\t");
+scanf("%d",&n);
+for(i=0;i<n;i++)
+{
+scanf("%d",&a[i]);
+}
+ for (i = 0; i < n-1; i++)
+ { 
+ min= i;
+ for (j = i+1; j < n; j++)
+ if (a[j] < a[min])
+ min= j;
+if(i<min)
+{
+int temp;
+temp=a[min];
+a[min]=a[i];
+a[i]=temp;
+}
+}
+printf("\nSorted array is\t");
+for(i=0;i<n;i++)
+{
+printf("%d\t",a[i]);
+}
 }
 
-Round Robin :
-#include <stdio.h>
-  int main() 
+int main()
 {
-      int arrival_time[10], burst_time[10], temp[10];
-      int i, smallest, count = 0, time, limit;
-      double wait_time = 0, turnaround_time = 0, end;
-      float average_waiting_time, average_turnaround_time;
-      printf("Enter the Total Number of Processes:");
-      scanf("%d", &limit); 
-      printf("nEnter Details of %d Processesn", limit);
-      for(i = 0; i < limit; i++)
-      {
-            printf("nEnter Arrival Time:");
-            scanf("%d", &arrival_time[i]);
-            printf("Enter Burst Time:");
-            scanf("%d", &burst_time[i]); 
-            temp[i] = burst_time[i];
-      }
-      burst_time[9] = 9999;  
-      for(time = 0; count != limit; time++)
-      {
-            smallest = 9;
-            for(i = 0; i < limit; i++)
-            {
-                  if(arrival_time[i] <= time && burst_time[i] < burst_time[smallest] && burst_time[i] > 0)
-                  {
-                        smallest = i;
-                  }
-            }
-            burst_time[smallest]--;
-            if(burst_time[smallest] == 0)
-            {
-                  count++;
-                  end = time + 1;
-                  wait_time = wait_time + end - arrival_time[smallest] - temp[smallest];
-                  turnaround_time = turnaround_time + end - arrival_time[smallest];
-            }
-      }
-      average_waiting_time = wait_time / limit; 
-      average_turnaround_time = turnaround_time / limit;
-      printf("nnAverage Waiting Time:t%lfn", average_waiting_time);
-      printf("Average Turnaround Time:t%lfn", average_turnaround_time);
-      return 0;
+pid_t pid;
+pid=fork();
+
+if(fork()==0)
+{
+bubblesort();
 }
+else
+{
+wait(NULL);
+selectionsort();
+}
+return 0;
+}
+
+
