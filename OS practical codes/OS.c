@@ -78,94 +78,87 @@ Implement the C program in which main program accepts the integers to be sorted.
 
 
 
-#include<stdio.h>
-#include<sys/types.h>
-#include<unistd.h>
-#include<stdlib.h>
-		
-void bass(int arr[30],int n)
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+void bubblesort()
 {
-	int i,j,temp;
-	for(i=0;i<n;i++)
-	{
-		for(j=0;j<n-1;j++)
-		{
-			if(arr[j]>arr[j+1])
-			{
-				temp=arr[j];
-				arr[j]=arr[j+1];
-				arr[j+1]=temp;
-			}
-		}
-	}
-	printf("\n Ascending Order \n");
-	for(i=0;i<n;i++)
-		printf("\t%d",arr[i]);
-	printf("\n\n\n");
+int i,j,a[50],n,temp;
+printf("\nBubble sort\n");
+printf("Enter size of array\t");
+scanf("%d",&n);
+for(i=0;i<n;i++)
+{
+scanf("%d",&a[i]);
+}
+for(i=0;i<n;i++)
+{
+for(j=i+1;j<n;j++)
+{
+if(a[i]>a[j])
+{
+int temp;
+temp=a[i];
+a[i]=a[j];
+a[j]=temp;
+}
+}
+}
+printf("\nSorted array is\t");
+for(i=0;i<n;i++)
+{
+printf("%d\t",a[i]);
+}  
+}
+void selectionsort()
+{
+int i,j,a[50],n,min;
+printf("Selection sort\n");
+printf("\nEnter size of array\t");
+scanf("%d",&n);
+for(i=0;i<n;i++)
+{
+scanf("%d",&a[i]);
+}
+ for (i = 0; i < n-1; i++)
+ { 
+ min= i;
+ for (j = i+1; j < n; j++)
+ if (a[j] < a[min])
+ min= j;
+if(i<min)
+{
+int temp;
+temp=a[min];
+a[min]=a[i];
+a[i]=temp;
+}
+}
+printf("\nSorted array is\t");
+for(i=0;i<n;i++)
+{
+printf("%d\t",a[i]);
+}
 }
 
-void bdsc(int arr[30],int n)
+int main()
 {
-	int i,j,temp;
-	for(i=0;i<n;i++)
-	{
-		for(j=0;j<n-1;j++)
-		{
-			if(arr[j]<arr[j+1])
-			{
-				temp=arr[j];
-				arr[j]=arr[j+1];
-				arr[j+1]=temp;
-			}
-		}
-	}
-	printf("\n Descending Sorting \n\n");
-	for(i=0;i<n;i++)
-		printf("\t%d",arr[i]);
-	printf("\n\n\n");
-	
-}
-void forkeg()
-{
- 	int arr[25],arr1[25],n,i,status;
- 	printf("\nEnter the no of values in array");
- 	scanf("%d",&n);
- 	printf("\nEnter the array elements");
- 	for(i=0;i<n;i++)
-    		scanf("%d",&arr[i]);
- 	int pid=fork();
-  	if(pid==0)
-   	{
-      		sleep(10);
-      		printf("\nchild process\n");
-      		printf("child process id=%d\n",getpid());
-      		bdsc(arr,n);
-       		printf("\nElements Sorted Using Quick Sort");
-     		printf("\n");
-       		for(i=0;i<n;i++)
-    			printf("%d,",arr[i]);
-    		printf("\b");
-     		printf("\nparent process id=%d\n",getppid());
-     		system("ps -x");
-       }    
-      else
-       {
-     		printf("\nparent process\n");
-     		printf("\nparent process id=%d\n",getppid());
-	 	bass(arr,n);	      
-		printf("Elements Sorted Using Bubble Sort");
-     		printf("\n");
-      		for(i=0;i<n;i++)
-    			printf("%d,",arr[i]);
-    		printf("\n\n\n"); 
-      } 
- }     
- int main()
- {
-   	forkeg();
-   	return 0;
- }  
+pid_t pid;
+pid=fork();
 
+if(fork()==0)
+{
+bubblesort();
+}
+else
+{
+wait(NULL);
+selectionsort();
+}
+return 0;
+}
 
 
 Orphan Program Code:
